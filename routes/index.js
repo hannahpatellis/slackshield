@@ -16,7 +16,7 @@ router.post("/api/s/newmessage", (req, res) => {
   // Handle a new incoming message
   // Based on the presence of event.event_ts and event.text
   // Also based on if the incoming event is a message and if there is no subtype
-  if(req.body.event.event_ts && req.body.event.text && req.body.event.type==="message" && !req.body.event.subtype) {
+  else if(req.body.event.event_ts && req.body.event.text && req.body.event.type==="message" && !req.body.event.subtype) {
     console.log("Incoming new message")
     console.log(req.body)
 
@@ -37,7 +37,7 @@ router.post("/api/s/newmessage", (req, res) => {
 
   // Handle a deleted message
   // Based on the presence of event.subtype
-  if(req.body.event.subtype==="message_deleted") {
+  else if(req.body.event.subtype==="message_deleted") {
     console.log("Incoming message deletion")
     console.log(req.body)
     
