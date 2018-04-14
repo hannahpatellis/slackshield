@@ -22,7 +22,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         deleted: DataTypes.BOOLEAN,
         edited: DataTypes.BOOLEAN,
-        original: DataTypes.STRING
+        original: DataTypes.STRING,
+        threadTime: DataTypes.STRING,
+        threadParent: DataTypes.STRING
     }, {charset: 'utf8mb4'})
     return Messages
 }

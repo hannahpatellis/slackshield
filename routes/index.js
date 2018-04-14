@@ -16,7 +16,8 @@ router.post("/api/s/newmessage", (req, res) => {
   // Handle a new incoming message
   // Based on the presence of event.event_ts and event.text
   // Also based on if the incoming event is a message and if there is no subtype
-  else if(req.body.event.event_ts && req.body.event.text && req.body.event.type==="message" && !req.body.event.subtype) {
+  // Also checks to make sure the new message is not part of a thread
+  else if(req.body.event.event_ts && req.body.event.text && req.body.event.type==="message" && !req.body.event.subtype && !req.body.event.thread_ts && !req.body.event.parent_user_id) {
     console.log("Incoming new message")
     console.log(req.body)
 
@@ -31,6 +32,29 @@ router.post("/api/s/newmessage", (req, res) => {
     db.Messages.create(incomingMessage)
       .then(dbMessages => {
         console.log("Message saved to database")
+        res.end()
+      })
+  }
+
+  // Handle a new incoming message on a thread
+  // Based on the presence of event.event_ts event.text, event.parent_user_id, and event.thread_ts
+  else if(req.body.event.event_ts && req.body.event.text && req.body.event.thread_ts && req.body.event.parent_user_id) {
+    console.log("Incoming new thread message")
+    console.log(req.body)
+
+    let incomingMessage = {
+      message: req.body.event.text,
+      user: req.body.event.user,
+      channel: req.body.event.channel,
+      time: req.body.event.event_ts.substring(0,10),
+      token: req.body.token,
+      threadParent: req.body.event.parent_user_id,
+      threadTime: req.body.event.thread_ts.substring(0,10)
+    }
+    
+    db.Messages.create(incomingMessage)
+      .then(dbMessages => {
+        console.log("Thread message saved to database")
         res.end()
       })
   }
