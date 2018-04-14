@@ -1,5 +1,5 @@
 .message{
-	border: 2px dotted black;
+	border: 2px solid black;
 	margin: 10px auto;
 	padding: 10px;
 }
@@ -11,7 +11,7 @@
 
 .message-text{
 	font-size: 18px;
-	color: #ccc;
+	color: #555;
 }
 
 .user{
