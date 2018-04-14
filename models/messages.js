@@ -19,7 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         token: {
             type: DataTypes.STRING,
             allowNull: false
-        }
+        },
+        deleted: DataTypes.BOOLEAN,
+        edited: DataTypes.BOOLEAN,
+        original: DataTypes.STRING
     }, {charset: 'utf8mb4'})
     return Messages
 }

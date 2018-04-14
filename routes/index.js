@@ -41,14 +41,14 @@ router.post("/api/s/newmessage", (req, res) => {
     console.log("Incoming message deletion")
     console.log(req.body)
     
-    db.Messages.destroy({
+    db.Messages.update({deleted: true}, {
       where: {
         message: req.body.event.previous_message.text,
         time: req.body.event.previous_message.ts.substring(0,10)
       }
     })
       .then(dbMessages => {
-        console.log("Message deleted from database")
+        console.log("Message marked deleted")
         res.end()
       })
   }
@@ -56,7 +56,7 @@ router.post("/api/s/newmessage", (req, res) => {
   // Handle anything else
   else {
     console.log("Incoming unknown message")
-    console.log(res.body)
+    console.log(req.body)
     res.end()
   }
 })
