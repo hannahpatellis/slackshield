@@ -1,0 +1,20 @@
+.message{
+	border: 2px dotted black;
+	margin: 10px auto;
+	padding: 10px;
+}
+
+.message-time{
+	font-size: 12px;
+	float: right;
+}
+
+.message-text{
+	font-size: 18px;
+	color: #ccc;
+}
+
+.user{
+	font-weight: bold;
+	color: red;
+}
