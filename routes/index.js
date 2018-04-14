@@ -3,6 +3,7 @@ const router = require("express").Router()
 
 router.post("/api/s/newmessage", (req, res) => {
   console.log(req.body)
+  if(req.body.challenge) res.send(req.body.challenge)
   res.end()
 })
 
