@@ -109,6 +109,14 @@ router.post("/api/s/newmessage", (req, res) => {
   }
 })
 
+router.get('/api/messages', (req, res) =>{
+  //use url query to filter out deleted messages
+  const includeDeleted = (req.query.includeDeleted === 'true')
+  const where = includeDeleted ? {} : {$or: [{deleted: false}, {deleted: null}]}
+  //query and return all messages as json
+  db.Messages.findAll({ where }).then( data => res.json(data) );
+})
+
 router.use((req, res) =>
   res.sendFile(path.join(__dirname, "../client/build/index.html"))
 )
