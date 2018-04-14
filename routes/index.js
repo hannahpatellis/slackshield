@@ -43,7 +43,8 @@ router.post("/api/s/newmessage", (req, res) => {
     
     db.Messages.destroy({
       where: {
-        message: req.body.event.previous_message.text
+        message: req.body.event.previous_message.text,
+        time: req.body.event.previous_message.ts.substring(0,10)
       }
     })
       .then(dbMessages => {
