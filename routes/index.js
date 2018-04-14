@@ -41,7 +41,7 @@ router.post("/api/s/newmessage", (req, res) => {
     console.log("Incoming message deletion")
     console.log(req.body)
     
-    db.Messages.update({deleted: true}, {
+    db.Messages.update({deleted: 1}, {
       where: {
         message: req.body.event.previous_message.text,
         time: req.body.event.previous_message.ts.substring(0,10)
@@ -49,6 +49,30 @@ router.post("/api/s/newmessage", (req, res) => {
     })
       .then(dbMessages => {
         console.log("Message marked deleted")
+        res.end()
+      })
+  }
+
+  // Handle an edited message
+  // Based on the presence of event.subtype
+  else if(req.body.event.subtype==="message_changed") {
+    console.log("Incoming message edit")
+    console.log(req.body)
+    
+    db.Messages.update(
+      {
+        message: req.body.event.message.text,
+        edited: 1,
+        original: req.body.event.previous_message.text
+      }, {
+        where: {
+          message: req.body.event.previous_message.text,
+          time: req.body.event.previous_message.ts.substring(0,10)
+        }
+      }
+    )
+      .then(dbMessages => {
+        console.log("Message marked edited and updated")
         res.end()
       })
   }
