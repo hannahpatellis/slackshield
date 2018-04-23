@@ -1,9 +1,8 @@
 const path = require("path")
 const router = require("express").Router();
-const request = require('request');
 const slackInfo = require('../helpers/slackInfo');
 
-var db = require("../models")
+const db = require("../models")
 
 router.post("/api/s/newmessage", (req, res) => {
 
@@ -111,19 +110,12 @@ router.post("/api/s/newmessage", (req, res) => {
   }
 })
 
-router.get('/api/channels', (req, res) => {
-  request('https://slack.com/api/conversations.list?token=xoxp-264260200416-266716851360-351149514834-df78c44e65e19c812ad8ed2be94486e1&pretty=1', function(err, data){
-    let channels = {};
-    data = JSON.parse(data.body).channels;
-    data.forEach(chan => { channels[chan.id] = chan.name });
-    res.json(channels);
-  })
+router.get('/api/users', (req, res) => {
+  slackInfo.getUsers().then(data => res.json(data)).catch(err => console.log(err));
 });
 
-router.get('/api/users', (req, res) => {
-  // console.log(slackInfo.getUsers);
-  // res.json('done')
-  slackInfo.getUsers().then(data => res.json(data));
+router.get('/api/channels', (req, res) => {
+  slackInfo.getChannels().then(data => res.json(data)).catch(err => console.log(err));
 });
 
 router.use((req, res) =>
