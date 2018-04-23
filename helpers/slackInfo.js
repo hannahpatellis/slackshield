@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 const slackInfo = requested => () => new Promise((resolve, reject) => {
-	axios.get(`https://slack.com/api/${requested}.list?token=${process.env.API_TOKEN}`)
+	axios.get(`https://slack.com/api/${requested}.list?token=${process.env.SLACK_TOKEN}`)
 		.then( ({data}) =>  {
 			let info = {};
 			const channels = (requested === 'conversations');
