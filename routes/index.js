@@ -124,7 +124,7 @@ router.get('/api/all', (req, res) => {
     response.channels = data;
     const includeDeleted = (req.query.includeDeleted === 'true')
     const where = includeDeleted ? {} : {$or: [{deleted: false}, {deleted: null}]}
-    return db.Messages.findAll({ where, order: 'channel' })
+    return db.Messages.findAll({ where, order: ['channel'] })
   })
   .then(data => {
     console.log('hit4')
