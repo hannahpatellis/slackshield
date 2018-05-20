@@ -110,7 +110,29 @@ router.post("/api/s/newmessage", (req, res) => {
   }
 })
 
-
+router.get('/api/all', (req, res) => {
+  console.log('hit1')
+  let response = {}
+  slackInfo.getUsers()
+  .then(data =>{
+    console.log('hit2')
+    response.users = data;
+    return slackInfo.getChannels();
+  })
+  .then(data => {
+    console.log('hit3')
+    response.channels = data;
+    const includeDeleted = (req.query.includeDeleted === 'true')
+    const where = includeDeleted ? {} : {$or: [{deleted: false}, {deleted: null}]}
+    return db.Messages.findAll({ where, order: 'channel' })
+  })
+  .then(data => {
+    console.log('hit4')
+    response.messages = data;
+    res.json(response);
+  })
+  .catch(err => res.json({success: false, err}));
+})
 
 router.get('/api/users', (req, res) => {
   slackInfo.getUsers().then(data => res.json(data)).catch(err => res.json({success: false, ...err}));
@@ -120,18 +142,20 @@ router.get('/api/channels', (req, res) => {
   slackInfo.getChannels().then(data => res.json(data)).catch(err => res.json({success: false, ...err}));
 });
 
-router.use((req, res) =>
-  res.sendFile(path.join(__dirname, "../client/build/index.html"))
-)
-
 router.get('/api/messages', (req, res) =>{
   //use url query to filter out deleted messages
   const includeDeleted = (req.query.includeDeleted === 'true')
   const where = includeDeleted ? {} : {$or: [{deleted: false}, {deleted: null}]}
   //query and return all messages as json
-  db.Messages.findAll({ where }).then( data => {
-    console.log(data);
-    res.json(data)} );
+  db.Messages.findAll({ where, order: 'channel' })
+  .then( data => res.json(data))
+  .catch(err => console.log(err))
 })
+
+router.use((req, res) =>
+  res.sendFile(path.join(__dirname, "../client/build/index.html"))
+)
+
+
 
 module.exports = router

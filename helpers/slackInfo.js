@@ -6,7 +6,6 @@ const slackInfo = requested => () => new Promise((resolve, reject) => {
 			let info = {};
 			const channels = (requested === 'conversations');
 		    data = channels ? data.channels : data.members;
-		    console.log(data[0])
 		    data.forEach(ele => { channels ? 
 		    						info[ele.id] = ele.name :
 		    						info[ele.id] = { 

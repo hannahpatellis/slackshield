@@ -2,6 +2,7 @@ import axios from "axios";
 
 export default {
   // Gets articles from the NYT API
+  initialLoad: () => axios.get('/api/all'),
   getAllMessages: function(includeDeleted) {
     return axios.get( `/api/messages/?includeDeleted=${includeDeleted}` );
   },
