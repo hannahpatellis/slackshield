@@ -110,16 +110,28 @@ router.post("/api/s/newmessage", (req, res) => {
   }
 })
 
+
+
 router.get('/api/users', (req, res) => {
-  slackInfo.getUsers().then(data => res.json(data)).catch(err => console.log(err));
+  slackInfo.getUsers().then(data => res.json(data)).catch(err => res.json({success: false, ...err}));
 });
 
 router.get('/api/channels', (req, res) => {
-  slackInfo.getChannels().then(data => res.json(data)).catch(err => console.log(err));
+  slackInfo.getChannels().then(data => res.json(data)).catch(err => res.json({success: false, ...err}));
 });
 
 router.use((req, res) =>
   res.sendFile(path.join(__dirname, "../client/build/index.html"))
 )
+
+router.get('/api/messages', (req, res) =>{
+  //use url query to filter out deleted messages
+  const includeDeleted = (req.query.includeDeleted === 'true')
+  const where = includeDeleted ? {} : {$or: [{deleted: false}, {deleted: null}]}
+  //query and return all messages as json
+  db.Messages.findAll({ where }).then( data => {
+    console.log(data);
+    res.json(data)} );
+})
 
 module.exports = router
