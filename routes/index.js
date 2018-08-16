@@ -3,6 +3,8 @@ const router = require("express").Router()
 
 var db = require("../models")
 
+const endIncoming = (req, res) => res.json( { challenge: req.body.challenge })
+
 router.post("/api/s/newmessage", (req, res) => {
 
   // Handle an incoming Slack authentication
@@ -32,7 +34,7 @@ router.post("/api/s/newmessage", (req, res) => {
     db.Messages.create(incomingMessage)
       .then(dbMessages => {
         console.log("Message saved to database")
-        res.end()
+        endIncoming(req, res)
       })
   }
 
@@ -55,7 +57,7 @@ router.post("/api/s/newmessage", (req, res) => {
     db.Messages.create(incomingMessage)
       .then(dbMessages => {
         console.log("Thread message saved to database")
-        res.end()
+        endIncoming(req, res)
       })
   }
 
@@ -73,7 +75,7 @@ router.post("/api/s/newmessage", (req, res) => {
     })
       .then(dbMessages => {
         console.log("Message marked deleted")
-        res.end()
+        endIncoming(req, res)
       })
   }
 
@@ -97,7 +99,7 @@ router.post("/api/s/newmessage", (req, res) => {
     )
       .then(dbMessages => {
         console.log("Message marked edited and updated")
-        res.end()
+        endIncoming(req, res)
       })
   }
 
@@ -105,7 +107,7 @@ router.post("/api/s/newmessage", (req, res) => {
   else {
     console.log("Incoming unknown message")
     console.log(req.body)
-    res.end()
+    endIncoming(req, res)
   }
 })
 
