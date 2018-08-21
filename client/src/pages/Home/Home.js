@@ -3,11 +3,41 @@ import React, { Component } from "react"
 import NavBar from "../../components/NavBar"
 
 import "./Home.css"
+import Message from '../Message'
+import API from '../../utils/API'
 
 class Home extends Component {
+  state = {
+    messages: [],
+    users: {},
+    channels: {}
+  }
+
+  componentDidMount(){
+    console.log('loading')
+    API.initialLoad()
+       .then(({data}) => this.setState({ ...data }))
+      .catch(err => console.log(err));
+  }
 
   handleChannelSelection = e => {
     console.log(e.target.getAttribute('data-channelname'))
+  }
+
+  renderChannelButtons = () => {
+      let channels = [];
+      for(let channel in this.state.channels){
+        channels.push(
+          <button 
+            type="button" 
+            className="list-group-item list-group-item-action active" 
+            data-channelname="sav-instructions" 
+            onClick={this.handleChannelSelection}
+            >
+          #{this.state.channels[channel]}
+          </button>)
+      }
+      return channels;
   }
 
   render() {
@@ -24,31 +54,24 @@ class Home extends Component {
                 </div>
                 <div>
                   <div className="list-group">
-                    <button type="button" className="list-group-item list-group-item-action active" data-channelname="sav-instructions" onClick={this.handleChannelSelection}>#sav-instructions</button>
-                    <button type="button" className="list-group-item list-group-item-action" data-channelname="sav-livestream" onClick={this.handleChannelSelection}>#sav-livestream</button>
-                    <button type="button" className="list-group-item list-group-item-action" data-channelname="anotherchannel" onClick={this.handleChannelSelection}>#anotherchannel</button>
-                    <button type="button" className="list-group-item list-group-item-action" data-channelname="electronicsquids" onClick={this.handleChannelSelection}>#electronicsquids</button>
+                  {this.renderChannelButtons()}
+                    
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="col">
-              <div className="card border-warning mb-3">
-                <div className="card-header">#sav-instructions</div>
-                <div className="card-body text-warning">
-                  <div className="time-header">
-                    <center>
-                      <p className="lead">Tuesday, January 4th 2018</p>
-                    </center>
-                  </div>
-                  <div className="alert alert-secondary" role="alert">
-                    <strong>Hannah Patellis</strong> <small>12:32 pm</small>
-                    <hr />
-                    <p>omg that is so funny</p>
-                  </div>
-                </div>
-              </div>
+              {this.state.messages.map(message =>(
+                <Message
+                   user={this.state.users[message.user].profile.real_name}
+                   date={message.createdAt}
+                   time={message.time}
+                   channel={this.state.channels[message.channel]}
+                   message={message.message}
+                  />
+                )
+              )}
             </div>
           </div>
         </div>

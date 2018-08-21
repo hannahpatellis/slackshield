@@ -1,14 +1,16 @@
+require('dotenv').config()
+
 const express = require("express")
 const bodyParser = require("body-parser")
 const routes = require("./routes")
-require('dotenv').config()
-
+const logger = require('morgan')
 const app = express()
 
 const PORT = process.env.PORT || 3001
 
-var db = require("./models")
+const db = require("./models")
 
+app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 

@@ -1,14 +1,14 @@
 import axios from "axios";
-import filterParams from "./filterParams";
 
 export default {
   // Gets articles from the NYT API
-  getArticles: function(params) {
-    return axios.get("/api/nyt", { params: filterParams(params) });
+  initialLoad: () => axios.get('/api/all'),
+  getAllMessages: function(includeDeleted) {
+    return axios.get( `/api/messages/?includeDeleted=${includeDeleted}` );
   },
   // Gets all saved articles
-  getSavedArticles: function() {
-    return axios.get("/api/articles");
+  getLatestMessages: function() {
+    return axios.get("/api/messages/?latest=true");
   },
   // Deletes the saved article with the given id
   deleteArticle: function(id) {
